@@ -17,7 +17,7 @@ class Deck:
         suits = ["♤", "♡", "♧", "♢"]
         ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
         #ranks = ['3']
-        ranks = ['A']
+        #ranks = ['A', '10']
         for i in range(num_decks):
             for suit in suits:
                 for rank in ranks:
@@ -127,7 +127,7 @@ class PlayerHand:
 
 
     def blackjack(self):
-        ten = any(card.rank in ['10', 'J', 'Q', 'K'] for card in self.cards)
+        ten = any(card.get_value() == 10 for card in self.cards)
         return 'A' in [card.rank for card in self.cards] and ten and len(self.cards) == 2
     
     def is_busted(self):
@@ -201,8 +201,6 @@ def played_hand(game, bet_amount=0, split_card=None):
         elif action == 's':
             # Dealer plays and determine winner
             game.dealer_play()
-            dealer_hand.show_cards()
-            print(game.get_winner())
             return (game.get_winner(), bet_amount)
         elif action == 'd' and player_hand.num_cards() == 2:
             bet_amount *= 2
@@ -346,13 +344,15 @@ def console_play():
             try:
                 print("Current Balance:", balance)
                 bet = int(input("Enter bet: ").strip().lower())
+                if(bet < 0):
+                    print("Bet must be non-negative. Try again.")
                 if bet > balance:
                     print("Insufficient balance. Try again.")
                     bet = -1
             except ValueError:
                 print("Invalid input. Please enter a valid bet amount.")
                 continue
-            print("Invalid input. Please enter a valid bet amount.")
+            
         game = deck.new_game()
         
         # Play the round

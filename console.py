@@ -1,4 +1,5 @@
 
+
 def console_play():
     deck = Deck(num_decks=8)
     deck.shuffle()
