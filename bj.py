@@ -16,7 +16,7 @@ class Deck:
         self.games = []  # List to track all active games
         suits = ["♤", "♡", "♧", "♢"]
         ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-        #ranks = ['3']
+        ranks = ['3']
         #ranks = ['A', '10']
         for i in range(num_decks):
             for suit in suits:
@@ -47,7 +47,7 @@ class Game:
         self.player_hand = PlayerHand()
         self.dealer_hand = DealerHand()
         
-    def deal_initial(self, split_card=None, dealer_card=None):
+    def deal_initial(self):
         for _ in range(2):
             self.player_hand.draw_card(self.deck.deal_card())
             self.dealer_hand.draw_card(self.deck.deal_card())

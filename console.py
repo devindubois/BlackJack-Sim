@@ -66,20 +66,74 @@ class ConsoleGame:
                 return (game.get_winner(), bet_amount)
             elif action == 'v' and player_hand.can_split():
                 print("splitting") 
-                results = []
+                hands = []
                 print("1st split hand:")
-                results.append(ConsoleGame.played_hand_split(game, bet_amount, split_card=player_hand.cards[0])) # Recursive split
+                hands.append(ConsoleGame.played_hand_split(game, bet_amount, split_hand=player_hand.cards[0])) # Recursive split
                 print("2nd split hand:")
-                results.append(ConsoleGame.played_hand_split(game, bet_amount, split_card=player_hand.cards[1]))
+                hands.append(ConsoleGame.played_hand_split(game, bet_amount, split_hand=player_hand.cards[1]))
+                game.dealer_play()
+                dealer_hand.show_cards()
+                results = []
+                for hand in hands:
+                    results.append((hand.get_winner(), bet_amount))
+                    print(hand.get_winner())
                 return results
             else:
                 print("Invalid action.")
         return ("E", bet_amount)  # Default return if loop exits unexpectedly E for Error
-    def played_hand_split(game, bet_amount=0, split_card=None):
-        if player_hand.get_value() == 21:
-            print("21: no more action")
-            game.dealer_play()
-            action = 's'
+    def played_hand_split(game, bet_amount, split_hand=None):
+        """
+        Play ONLY the player's actions for a single hand and return the final value.
+        No dealer logic. Return is an int (can be >21 if busted).
+        If split_hand is None, uses game.player_hand.
+        """
+        game.hand = PlayerHand()
+        game.hand.deal_split(split_hand)
+
+        while not hand.is_busted():
+            # Auto-stop at 21
+            if hand.get_value() == 21:
+                break
+
+            # Display current hand state
+            if hand.has_soft_ace():
+                msg = f"{hand.get_value() + 10}, {hand.get_value()}"
+            else:
+                msg = f"{hand.get_value()}"
+            print("Player's Hand:", hand.get_cards(), "\nValue:", msg)
+
+            # Prompt for action
+            print("Choose your Action")
+            print("h: Hit")
+            print("s: Stand")
+            if hand.num_cards() == 2:
+                print("d: Double Down")
+            action = input().strip().lower()
+
+            if action == 'h':
+                try:
+                    game.player_hit(target_hand=hand)
+                except TypeError:
+                    game.player_hit()
+                continue
+
+            elif action == 's':
+                break
+
+            elif action == 'd' and hand.num_cards() == 2:
+                try:
+                    game.player_hit(target_hand=hand)
+                    bet_amount *= 2
+                except TypeError:
+                    game.player_hit()
+                # After a double, player stands automatically
+                break
+
+            else:
+                print("Invalid action.")
+
+        return (hand, bet_amount)
+
 
     def console_play():
         deck = Deck(num_decks=8)
