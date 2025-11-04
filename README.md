@@ -25,14 +25,14 @@ python ./main.py
 
 <h2>Creation process of Blackjack Sim</h2>
 <h3>✅Create a fully functional blackjack console program</h3>
-1. Create card and deck logic
-2. Create dealer and player hand logic
-3. Introduce a game loop
-4. Add functionality for splitting with recursive logic
+1. Create card and deck logic <br>
+2. Create dealer and player hand logic <br>
+3. Introduce a game loop <br>
+4. Add functionality for splitting with recursive logic <br>
 <h3>✅Enable Automatic Betting System</h3>
-1. enable automatic playing and writing to output file with no strategy (hit until 17)
-2. add reading strategy from excel file and choosing action based on basic strategy
-3. add customization of number of hands, bet size, starting balance
+1. enable automatic playing and writing to output file with no strategy (hit until 17) <br>
+2. add reading strategy from excel file and choosing action based on basic strategy <br>
+3. add customization of number of hands, bet size, starting balance <br>
 <h3>Modify Automatic Betting System to count cards and change strategy chart based on Count</h3>
 <h3>Convert the Console Program to an application window, giving it a UI</h3>
 <h3></h3>
