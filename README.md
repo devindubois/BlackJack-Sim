@@ -7,6 +7,17 @@ Currently I am working on transitioning the project from a console program to an
 
 This project demonstrates knowledge of object oriented programming, python, working with lots of data, data visualization, etc.
 
+<h2>Blackjack Rules</h2>
+Blackjack pays 3:2
+One split allowed
+Double allowed on any 2 cards
+Double allowed after split
+Dealer stands on soft 17
+Deck amount varies
+Play after split aces allowed but not a resplit
+Surrender not allowed
+Insurance not allowed (because it's a sucker's bet)
+
 <h2>How To Run</h2>
 Install files
 cd to BlackJack-Sim
@@ -18,6 +29,12 @@ python ./main.py
 2. Create dealer and player hand logic
 3. Introduce a game loop
 4. Add functionality for splitting with recursive logic
-<h3>Enable Automatic Betting System</h3>
+<h3>✅Enable Automatic Betting System</h3>
+1. enable automatic playing and writing to output file with no strategy (hit until 17)
+2. add reading strategy from excel file and choosing action based on basic strategy
+3. add customization of number of hands, bet size, starting balance
 <h3>Modify Automatic Betting System to count cards and change strategy chart based on Count</h3>
 <h3>Convert the Console Program to an application window, giving it a UI</h3>
+<h3></h3>
+<h3></h3>
+<h3>Allow for changing of blackjack Rules</h3>
