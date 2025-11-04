@@ -8,15 +8,15 @@ Currently I am working on transitioning the project from a console program to an
 This project demonstrates knowledge of object oriented programming, python, working with lots of data, data visualization, etc.
 
 <h2>Blackjack Rules</h2>
-Blackjack pays 3:2
-One split allowed
-Double allowed on any 2 cards
-Double allowed after split
-Dealer stands on soft 17
-Deck amount varies
-Play after split aces allowed but not a resplit
-Surrender not allowed
-Insurance not allowed (because it's a sucker's bet)
+Blackjack pays 3:2 <br>
+One split allowed <br>
+Double allowed on any 2 cards <br>
+Double allowed after split <br>
+Dealer stands on soft 17 <br>
+Deck amount varies <br>
+Play after split aces allowed but not a resplit <br>
+Surrender not allowed <br>
+Insurance not allowed (because it's a sucker's bet) <br>
 
 <h2>How To Run</h2>
 Install files <br>
