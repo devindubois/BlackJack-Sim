@@ -64,12 +64,12 @@ class Game:
     def player_hit(self, handnum=0):
         self.player_hands[handnum].draw_card(self.deck.deal_card())
 
-    def dealer_play(self, AUTO=True):
-        if not AUTO:
+    def dealer_play(self, Auto=True):
+        if not Auto:
             print("Dealer's Hand:", self.dealer_hand.get_cards(), ": ", self.dealer_hand.get_value())
         while self.dealer_hand.should_hit():
             self.dealer_hand.draw_card(self.deck.deal_card())
-            if not AUTO:
+            if not Auto:
                 print("Dealer's Hand:", self.dealer_hand.get_cards(), ": ", self.dealer_hand.get_value())
 
     def end_game(self):
