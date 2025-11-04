@@ -16,8 +16,8 @@ class Deck:
         self.games = []  # List to track all active games
         suits = ["♤", "♡", "♧", "♢"]
         ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-        ranks = ['3']
-        #ranks = ['A', '10']
+        #ranks = ['3'] #testing
+        #ranks = ['A', '10'] #testing
         for i in range(num_decks):
             for suit in suits:
                 for rank in ranks:
@@ -44,40 +44,47 @@ class Deck:
 class Game:
     def __init__(self, deck):
         self.deck = deck  # Store reference to the parent deck
-        self.player_hand = PlayerHand()
+        self.player_hands = []
         self.dealer_hand = DealerHand()
+
+    def new_hand(self):
+        self.player_hand = PlayerHand()
+        self.player_hands.append(self.player_hand)
         
-    def deal_initial(self):
+    def deal_initial(self, handnum=0):
         for _ in range(2):
-            self.player_hand.draw_card(self.deck.deal_card())
+            self.player_hands[handnum].draw_card(self.deck.deal_card())
             self.dealer_hand.draw_card(self.deck.deal_card())
             
+            
     def deal_split(self, split_card):
-        self.player_hand.clear()
-        self.player_hand.draw_card(split_card)
-        self.player_hand.draw_card(self.deck.deal_card())
-        
-    def player_hit(self):
-        self.player_hand.draw_card(self.deck.deal_card())
-    
-    def dealer_play(self):
-        print("Dealer's Hand:", self.dealer_hand.get_cards(), ": ", self.dealer_hand.get_value())
+        self.player_hands[-1].clear()
+        self.player_hands[-1].draw_card(split_card)
+        self.player_hands[-1].draw_card(self.deck.deal_card())
+
+    def player_hit(self, handnum=0):
+        self.player_hands[handnum].draw_card(self.deck.deal_card())
+
+    def dealer_play(self, Auto=True):
+        if not Auto:
+            print("Dealer's Hand:", self.dealer_hand.get_cards(), ": ", self.dealer_hand.get_value())
         while self.dealer_hand.should_hit():
             self.dealer_hand.draw_card(self.deck.deal_card())
-            print("Dealer's Hand:", self.dealer_hand.get_cards(), ": ", self.dealer_hand.get_value())
+            if not Auto:
+                print("Dealer's Hand:", self.dealer_hand.get_cards(), ": ", self.dealer_hand.get_value())
 
     def end_game(self):
         """Clean up the game when it's done"""
         self.deck.remove_game(self)
-    
-    def get_winner(self):
-        if self.player_hand.is_busted():
+
+    def get_winner(self, handnum=0):
+        if self.player_hands[handnum].is_busted():
             return "L"
         elif self.dealer_hand.is_busted():
             return "W"
-        elif self.player_hand.get_value() > self.dealer_hand.get_value():
+        elif self.player_hands[handnum].get_value() > self.dealer_hand.get_value():
             return "W"
-        elif self.player_hand.get_value() < self.dealer_hand.get_value():
+        elif self.player_hands[handnum].get_value() < self.dealer_hand.get_value():
             return "L"
         else:
             return "P"
@@ -149,5 +156,5 @@ class DealerHand(PlayerHand):
     def get_card_shown(self):
         output = f"{self.cards[0].rank} of {self.cards[0].suit}"
         return output
-
-
+    def get_card_shown_value(self):
+        return self.cards[0].get_value()
