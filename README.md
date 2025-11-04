@@ -19,9 +19,9 @@ Surrender not allowed
 Insurance not allowed (because it's a sucker's bet)
 
 <h2>How To Run</h2>
-Install files
-cd to BlackJack-Sim
-python ./main.py
+Install files <br>
+cd to BlackJack-Sim <br>
+python ./main.py <br>
 
 <h2>Creation process of Blackjack Sim</h2>
 <h3>✅Create a fully functional blackjack console program</h3>
