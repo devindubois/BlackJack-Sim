@@ -56,6 +56,7 @@ class Game:
             self.player_hands[handnum].draw_card(self.deck.deal_card())
             self.dealer_hand.draw_card(self.deck.deal_card())
             
+            
     def deal_split(self, split_card):
         self.player_hands[-1].clear()
         self.player_hands[-1].draw_card(split_card)

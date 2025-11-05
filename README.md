@@ -13,7 +13,7 @@ One split allowed
 Double allowed on any 2 cards
 Double allowed after split
 Dealer stands on soft 17
-Deck amount varies
+Deck amount: 8
 Play after split aces allowed but not a resplit
 Surrender not allowed
 Insurance not allowed (because it's a sucker's bet)
@@ -33,6 +33,7 @@ python ./main.py
 1. enable automatic playing and writing to output file with no strategy (hit until 17)
 2. add reading strategy from excel file and choosing action based on basic strategy
 3. add customization of number of hands, bet size, starting balance
+4. Optimize program from ~1180 hands per minute (stopwatch timed, too slow) and abstract repeated code
 <h3>Modify Automatic Betting System to count cards and change strategy chart based on Count</h3>
 <h3>Convert the Console Program to an application window, giving it a UI</h3>
 <h3></h3>

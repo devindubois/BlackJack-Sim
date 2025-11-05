@@ -66,10 +66,11 @@ class AutoGame:
                     action = "H"
                 return action.lower()
 
-    def auto_play_loop(bet_amount=1, num_games=100, balance=1000):
-        deck = Deck(num_decks=8)
+    def auto_play_loop(bet_amount=1, num_games=100, balance=1000, num_decks=8):
+        deck = Deck(num_decks)
         deck.shuffle()
         total_profit = 0
+        shoe_profit = 0
         open('results.txt', 'w').close()  # Clear results file at start
         
         for _ in range(num_games):
@@ -79,14 +80,17 @@ class AutoGame:
             round_result = AutoGame.played_hand(game, bet_amount, balance, strategy)
             profit = Game.interpret_result(round_result)
             balance += profit
+            total_profit += profit
+            shoe_profit += profit
             with open('results.txt', 'a') as f:
                 f.write(f"hand{_}: balance: {balance}\n")
             game.end_game()
             #print("hand", _, "result:", round_result, "balance:", balance)
             if len(deck.cards) < (52 * 8 * 0.25):  # Less than 25% of cards remain
-                    print("Reshuffling deck...")
+                    print("Reshuffling deck. Shoe Profit: ", shoe_profit)
                     deck = Deck(num_decks=8)
                     deck.shuffle()
+                    shoe_profit = 0
 
     
 
@@ -159,21 +163,20 @@ class AutoGame:
         dealer_hand = game.dealer_hand
         game.deal_initial()
         player_hand = game.player_hands[0]
-
-        while not player_hand.is_busted():
-            if player_hand.blackjack():
-                #dealer_hand.show_cards()
-                if dealer_hand.blackjack():
-                    #print("Push!")
-                    return ("P", bet_amount)
-                #print("Blackjack! You win!")
-                return ("W!", bet_amount)
-
+        if player_hand.blackjack():
+            #dealer_hand.show_cards()
             if dealer_hand.blackjack():
-                #print("Dealer has Blackjack! You lose!")
-                #dealer_hand.show_cards()
-                return ("L", bet_amount)
+                #print("Push!")
+                return ("P", bet_amount)
+            #print("Blackjack! You win!")
+            return ("W!", bet_amount)
 
+        if dealer_hand.blackjack():
+            return ("L", bet_amount)
+        
+        while not player_hand.is_busted():
+            
+            #determine action
             if player_hand.get_value() == 21:
                 #print("21: no more action")
                 action = 's'
