@@ -35,7 +35,10 @@ python ./main.py <br>
 3. add customization of number of hands, bet size, starting balance <br>
 4. Optimize program from ~1180 hands per minute (stopwatch timed, too slow) and abstract repeated code <br>
 <h3>Modify Automatic Betting System to count cards and change strategy chart based on Count</h3>
+1. Read from specific file name based on the card count ✅
+2. modify the blackjack engine to count cards during play and return the card count for the next hand
+3. change the strategies to reflect optimal play for card count
 <h3>Convert the Console Program to an application window, giving it a UI</h3>
-<h3></h3>
-<h3></h3>
 <h3>Allow for changing of blackjack Rules</h3>
+<h3>Add more customization: changing strategies, bet sizes, number of hands, etc</h3>
+<h3>Create a website / Web app to make this publicly accessible</h3>
