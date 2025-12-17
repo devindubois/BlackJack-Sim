@@ -33,7 +33,7 @@ python ./main.py <br>
 1. enable automatic playing and writing to output file with no strategy (hit until 17) <br>
 2. add reading strategy from excel file and choosing action based on basic strategy <br>
 3. add customization of number of hands, bet size, starting balance <br>
-4. Optimize program from ~1180 hands per minute (stopwatch timed, too slow) and abstract repeated code
+4. Optimize program from ~1180 hands per minute (stopwatch timed, too slow) and abstract repeated code <br>
 <h3>Modify Automatic Betting System to count cards and change strategy chart based on Count</h3>
 <h3>Convert the Console Program to an application window, giving it a UI</h3>
 <h3></h3>

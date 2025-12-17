@@ -5,7 +5,28 @@ from openpyxl import load_workbook
 class AutoGame:
     def determine_strategy(card_count: int) -> str:
         # For now return a static path
+        if card_count >= 5:
             return "base_strategy.xlsx"
+        elif card_count >= 5:
+            return "base_strategy.xlsx"
+        elif card_count <= -5:
+            return "base_strategy.xlsx"
+        else:
+            return "base_strategy.xlsx"
+        
+    def determine_bet_multiple(card_count: int) -> str:
+        # For now return a static path
+        if card_count >= 8:
+            return 10
+        elif card_count >= 4:
+            return 4
+        elif card_count >= 0:
+            return 2
+        elif card_count >= -8:
+            return 1
+        else:
+            return 0
+
     class Strategy:
         def __init__(self, path: str):
             self.hard_df, self.soft_df, self.split_df = self.read_exact_ranges(path)
@@ -71,19 +92,20 @@ class AutoGame:
         deck.shuffle()
         total_profit = 0
         shoe_profit = 0
+        card_count = 5
         open('results.txt', 'w').close()  # Clear results file at start
         
         for _ in range(num_games):
-            strategy_path = AutoGame.determine_strategy(0)  # Placeholder for card count
+            strategy_path = AutoGame.determine_strategy(card_count)
             strategy = AutoGame.Strategy(strategy_path)
             game = deck.new_game()
-            round_result = AutoGame.played_hand(game, bet_amount, balance, strategy)
+            round_result = AutoGame.played_hand(game, bet_amount*AutoGame.determine_bet_multiple(card_count), balance, strategy)
             profit = Game.interpret_result(round_result)
             balance += profit
             total_profit += profit
             shoe_profit += profit
             with open('results.txt', 'a') as f:
-                f.write(f"hand{_}: balance: {balance}\n")
+                f.write(f"hand{_}: balance: {balance} card count: {card_count}\n")
             game.end_game()
             #print("hand", _, "result:", round_result, "balance:", balance)
             if len(deck.cards) < (52 * 8 * 0.25):  # Less than 25% of cards remain
