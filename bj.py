@@ -91,12 +91,17 @@ class Game:
     def interpret_result(result):
         """Returns net profit/loss from any result structure"""
         if isinstance(result, tuple):
-            outcome, bet = result
+            outcome, bet, count = result
             if outcome not in ['W', 'W!','L','P']:
                 raise ValueError("Invalid outcome")
             return bet*1.5 if outcome == 'W!' else bet if outcome == 'W' else -bet if outcome == 'L' else 0
         return sum(Game.interpret_result(r) for r in result) if isinstance(result, list) else 0
-
+    def interpret_card_count(result):
+        """Returns card count from any result structure"""
+        if isinstance(result, tuple):
+            _, _, count = result
+            return count
+        return sum(Game.interpret_card_count(r) for r in result) if isinstance(result, list) else 0
 class PlayerHand:
     def __init__(self):
         self.cards = []

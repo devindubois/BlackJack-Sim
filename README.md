@@ -24,6 +24,7 @@ cd to BlackJack-Sim <br>
 python ./main.py <br>
 
 <h2>Creation process of Blackjack Sim</h2>
+
 <h3>Create a fully functional blackjack console program</h3>
 
 - [x] Create card and deck logic <br>
@@ -41,6 +42,7 @@ python ./main.py <br>
 - [x] Read from specific file name based on the card count 
 - [ ] modify the blackjack engine to count cards during play and return the card count for the next hand
 - [ ] change the strategies to reflect optimal play for card count
+
 <h3>Convert the Console Program to an application window, giving it a UI</h3>
 <h3>Allow for changing of blackjack Rules</h3>
 <h3>Add more customization: changing strategies, bet sizes, number of hands, etc</h3>
