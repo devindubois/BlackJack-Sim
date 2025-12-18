@@ -12,8 +12,8 @@ def main():
         num_games = int(input("Enter number of games to play: ").strip())
         balance = int(input("Enter starting balance: ").strip())
         bet_amount = int(input("Enter bet amount per game: ").strip())
-        
-        AutoGame.auto_play_loop(num_games=num_games, balance=balance, bet_amount=bet_amount)
+        num_decks = int(input("Enter number of decks: ").strip())
+        AutoGame.auto_play_loop(num_games=num_games, balance=balance, bet_amount=bet_amount, num_decks=num_decks)
     else:
         print("Invalid mode selected.")
 

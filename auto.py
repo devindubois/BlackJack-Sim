@@ -2,7 +2,29 @@ from bj import Game, PlayerHand, DealerHand, Deck, Card
 import pandas as pd
 from openpyxl import load_workbook
 
+
+
+
 class AutoGame:
+    def count_cards(hands):
+        """Return Hi-Lo count for a collection of hands.
+
+        Rules: 2-6 => +1, 10/J/Q/K/A => -1, all others => 0.
+        `hands` may be an iterable of PlayerHand objects or iterables of card-like objects.
+        """
+        total = 0
+        for hand in hands:
+            # support both PlayerHand objects (with .cards) and plain iterables
+            cards = getattr(hand, 'cards', hand)
+            for c in cards:
+                rank = getattr(c, 'rank', c)
+                r = str(rank)
+                if r in ('2', '3', '4', '5', '6'):
+                    total += 1
+                elif r in ('10', 'J', 'Q', 'K', 'A'):
+                    total -= 1
+        return total
+
     def determine_strategy(card_count: int) -> str:
         # For now return a static path
         if card_count >= 5:
@@ -14,15 +36,17 @@ class AutoGame:
         else:
             return "base_strategy.xlsx"
         
-    def determine_bet_multiple(card_count: int) -> str:
+    def determine_bet_multiple(true_card_count: int) -> str:
         # For now return a static path
-        if card_count >= 8:
+        if true_card_count >= 10:
             return 10
-        elif card_count >= 4:
+        if true_card_count >= 5:
             return 4
-        elif card_count >= 0:
+        elif true_card_count >= 2:
             return 2
-        elif card_count >= -8:
+        elif true_card_count >= 0:
+            return 1
+        elif true_card_count >= -5:
             return 1
         else:
             return 0
@@ -92,26 +116,39 @@ class AutoGame:
         deck.shuffle()
         total_profit = 0
         shoe_profit = 0
-        card_count = 5
+        card_count = 0
         open('results.txt', 'w').close()  # Clear results file at start
         
         for _ in range(num_games):
-            strategy_path = AutoGame.determine_strategy(card_count)
+            modified_bet_amount = bet_amount * AutoGame.determine_bet_multiple(card_count/num_decks)
+            if balance < modified_bet_amount:
+                print("Out of money! Time to go home.")
+                break
+            if modified_bet_amount == 0:
+                print("Time to leave the table, count is too low. Shoe Profit: ", shoe_profit)
+                deck = Deck(num_decks=8)
+                deck.shuffle()
+                card_count = 0
+                shoe_profit = 0
+            true_card_count = card_count/num_decks
+            strategy_path = AutoGame.determine_strategy(true_card_count)
             strategy = AutoGame.Strategy(strategy_path)
             game = deck.new_game()
-            round_result = AutoGame.played_hand(game, bet_amount*AutoGame.determine_bet_multiple(card_count), balance, strategy)
+            round_result = AutoGame.played_hand(game, modified_bet_amount, balance, strategy)
             profit = Game.interpret_result(round_result)
+            card_count += Game.interpret_card_count(round_result)
             balance += profit
             total_profit += profit
             shoe_profit += profit
             with open('results.txt', 'a') as f:
-                f.write(f"hand{_}: balance: {balance} card count: {card_count}\n")
+                f.write(f"hand{_}: balance: {balance} card count: {card_count} \"True\" card count: {card_count/num_decks}\n")
             game.end_game()
             #print("hand", _, "result:", round_result, "balance:", balance)
             if len(deck.cards) < (52 * 8 * 0.25):  # Less than 25% of cards remain
                     print("Reshuffling deck. Shoe Profit: ", shoe_profit)
                     deck = Deck(num_decks=8)
                     deck.shuffle()
+                    card_count = 0
                     shoe_profit = 0
 
     
@@ -189,12 +226,12 @@ class AutoGame:
             #dealer_hand.show_cards()
             if dealer_hand.blackjack():
                 #print("Push!")
-                return ("P", bet_amount)
+                return ("P", bet_amount, AutoGame.count_cards([player_hand, dealer_hand]))
             #print("Blackjack! You win!")
-            return ("W!", bet_amount)
+            return ("W!", bet_amount, AutoGame.count_cards([player_hand, dealer_hand]))
 
         if dealer_hand.blackjack():
-            return ("L", bet_amount)
+            return ("L", bet_amount, AutoGame.count_cards([player_hand, dealer_hand]))
         
         while not player_hand.is_busted():
             
@@ -211,7 +248,7 @@ class AutoGame:
                 if player_hand.is_busted():
                     #print("Player busted!")
                     #dealer_hand.show_cards()
-                    return ("L", bet_amount)
+                    return ("L", bet_amount, AutoGame.count_cards([player_hand, dealer_hand]))
                 continue
 
             elif action == 's':
@@ -219,7 +256,7 @@ class AutoGame:
                 #dealer_hand.show_cards()
                 result = game.get_winner(0)
                 #print(result)
-                return (result, bet_amount)
+                return (result, bet_amount, AutoGame.count_cards([player_hand, dealer_hand]))
 
             elif action == 'd' and player_hand.num_cards() == 2 and balance >= bet_amount:
                 bet_amount *= 2
@@ -228,12 +265,12 @@ class AutoGame:
                 if player_hand.is_busted():
                     #print("Player busted after doubling down!")
                     #dealer_hand.show_cards()
-                    return ("L", bet_amount)
+                    return ("L", bet_amount, AutoGame.count_cards([player_hand, dealer_hand]))
                 game.dealer_play()
                 #dealer_hand.show_cards()
                 result = game.get_winner(0)
                 #print(result)
-                return (result, bet_amount)
+                return (result, bet_amount, AutoGame.count_cards([player_hand, dealer_hand]))
 
             elif action == 'v' and player_hand.can_split() and balance >= bet_amount:
                 #print("splitting")
@@ -260,8 +297,7 @@ class AutoGame:
                 r2 = game.get_winner(1)
                 #print(r1)
                 #print(r2)
-                return [(r1, b1), (r2, b2)]
-
+                return [(r1, b1, AutoGame.count_cards([h1, h2, dealer_hand])), (r2, b2, 0)]
             #else:
 
                 #print("Invalid action: " + action)
@@ -269,5 +305,7 @@ class AutoGame:
                 #print("Dealer showing:", dealer_hand.get_card_shown_value())
                 
 
-        return ("E", bet_amount)
+        return ("E", bet_amount, 0)
+    
 
+    
