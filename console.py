@@ -1,8 +1,27 @@
 from bj import Game, PlayerHand, DealerHand, Deck, Card
 class ConsoleGame:
+    def count_cards(hands):
+        """Return Hi-Lo count for a collection of hands.
 
+        Rules: 2-6 => +1, 10/J/Q/K/A => -1, all others => 0.
+        `hands` may be an iterable of PlayerHand objects or iterables of card-like objects.
+        """
+        total = 0
+        for hand in hands:
+            # support both PlayerHand objects (with .cards) and plain iterables
+            cards = getattr(hand, 'cards', hand)
+            for c in cards:
+                rank = getattr(c, 'rank', c)
+                r = str(rank)
+                if r in ('2', '3', '4', '5', '6'):
+                    total += 1
+                elif r in ('10', 'J', 'Q', 'K', 'A'):
+                    total -= 1
+        return total
+    
     def console_play(balance = 1000):
         deck = Deck(num_decks=8)
+        card_count = 0
         deck.shuffle()
         # Game loop
         while True:
@@ -41,7 +60,8 @@ class ConsoleGame:
                         print("Loss")
                     elif res[0] == 'P' :
                         print("Push")
-                
+            card_count += round_result[2]
+            print("Card Count: ", card_count)
             print("Profit/Loss:", Game.interpret_result(round_result))
             balance += Game.interpret_result(round_result)
             # Clean up the game
@@ -146,14 +166,14 @@ class ConsoleGame:
                 dealer_hand.show_cards()
                 if dealer_hand.blackjack():
                     print("Push!")
-                    return ("P", bet_amount)
+                    return ("P", bet_amount, ConsoleGame.count_cards([player_hand, dealer_hand]))
                 print("Blackjack! You win!")
-                return ("W!", bet_amount)
+                return ("W!", bet_amount, ConsoleGame.count_cards([player_hand, dealer_hand]))
 
             if dealer_hand.blackjack():
                 print("Dealer has Blackjack! You lose!")
                 dealer_hand.show_cards()
-                return ("L", bet_amount)
+                return ("L", bet_amount, ConsoleGame.count_cards([player_hand, dealer_hand]))
 
             if player_hand.get_value() == 21:
                 print("21: no more action")
@@ -174,7 +194,7 @@ class ConsoleGame:
                 if player_hand.is_busted():
                     print("Player busted!")
                     dealer_hand.show_cards()
-                    return ("L", bet_amount)
+                    return ("L", bet_amount, ConsoleGame.count_cards([player_hand, dealer_hand]))
                 continue
 
             elif action == 's':
@@ -182,7 +202,7 @@ class ConsoleGame:
                 dealer_hand.show_cards()
                 result = game.get_winner(0)
                 print(result)
-                return (result, bet_amount)
+                return (result, bet_amount, ConsoleGame.count_cards([player_hand, dealer_hand]))
 
             elif action == 'd' and player_hand.num_cards() == 2 and balance >= bet_amount:
                 bet_amount *= 2
@@ -191,12 +211,12 @@ class ConsoleGame:
                 if player_hand.is_busted():
                     print("Player busted after doubling down!")
                     dealer_hand.show_cards()
-                    return ("L", bet_amount)
+                    return ("L", bet_amount, ConsoleGame.count_cards([player_hand, dealer_hand]))
                 game.dealer_play(Auto=False)
                 dealer_hand.show_cards()
                 result = game.get_winner(0)
                 print(result)
-                return (result, bet_amount)
+                return (result, bet_amount, ConsoleGame.count_cards([player_hand, dealer_hand]))
 
             elif action == 'v' and player_hand.can_split() and balance >= bet_amount:
                 print("splitting")
@@ -223,7 +243,7 @@ class ConsoleGame:
                 r2 = game.get_winner(1)
                 print(r1)
                 print(r2)
-                return [(r1, b1), (r2, b2)]
+                return [(r1, b1, ConsoleGame.count_cards([player_hand, dealer_hand])), (r2, b2, 0)]
 
             else:
                 print("Invalid action.")
