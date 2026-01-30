@@ -3,8 +3,7 @@
 <h2>Abstract</h2>
 This is a passion project based on my love for statistics and gambling. This project once finished will allow the user to create betting strategies and run any number of blackjack hands and recieve a visual representation in the form of a graph or otherwise of how thier strategy performed over time.  
 Included in this will be multiple strategy charts that the program will read from based on the "True Count" of the deck, and yes this simulator will account for card counting to allow users to practice and tweak their card counting strategies.
-Currently I am working on transitioning the project from a console program to an application with a UI.
-
+This project has completed development and the focus has shifted to a group senior project with the same idea and better implementation.
 This project demonstrates knowledge of object oriented programming, python, working with lots of data, data visualization, etc.
 
 <h2>Blackjack Rules</h2>
@@ -36,13 +35,14 @@ python ./main.py <br>
 - [x] enable automatic playing and writing to output file with no strategy (hit until 17) <br>
 - [x] add reading strategy from excel file and choosing action based on basic strategy <br>
 - [x] add customization of number of hands, bet size, starting balance <br>
-- [ ] Optimize program from ~1180 hands per minute (stopwatch timed, too slow) and abstract repeated code <br>
+- [x] abstract repeated code <br>
 <h3>Modify Automatic Betting System to count cards and change strategy chart based on Count</h3>
 
 - [x] Read from specific file name based on the card count 
-- [ ] modify the blackjack engine to count cards during play and return the card count for the next hand
-- [ ] change the strategies to reflect optimal play for card count
+- [x] modify the blackjack engine to count cards during play and return the card count for the next hand
+- [x] change the strategies to reflect optimal play for card count (bet sizing)
 
+Ideas for the Senior Project (new project)
 <h3>Convert the Console Program to an application window, giving it a UI</h3>
 <h3>Allow for changing of blackjack Rules</h3>
 <h3>Add more customization: changing strategies, bet sizes, number of hands, etc</h3>
